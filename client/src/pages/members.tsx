@@ -177,9 +177,9 @@ export default function MembersPage() {
 
   // Links do menu
   const menuLinks = [
-    { name: "Início", icon: Home, path: "/member", glow: "from-blue-500/20 to-cyan-500/20" },
-    { name: "Comunidade", icon: Users, path: "/member/comunidade", glow: "from-purple-500/20 to-pink-500/20" },
-    { name: "Ranking", icon: TrendingUp, path: "/member/ranking", glow: "from-yellow-500/20 to-orange-500/20" },
+    { name: "Início", icon: Home, path: "/member" },
+    { name: "Comunidade", icon: Users, path: "/member/comunidade" },
+    { name: "Ranking", icon: TrendingUp, path: "/member/ranking" },
   ];
 
   if (isInternalRoute) {
@@ -221,23 +221,15 @@ export default function MembersPage() {
         <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-blue-700/10 rounded-full blur-3xl" />
       </div>
       
-      {/* TOPBAR RESPONSIVO COM EFEITOS */}
+      {/* TOPBAR COM EFEITOS NA LOGO E MENU */}
       <header className={`fixed top-0 left-0 w-full z-40 transition-all duration-500 ${
         scrolled 
           ? 'bg-black/95 backdrop-blur-md border-b border-blue-900/60 shadow-[0_0_30px_rgba(0,100,255,0.1)]' 
           : 'bg-black/80 backdrop-blur-sm border-b border-blue-900/30'
       }`}>
-        {/* Efeito de brilho na borda superior */}
-        <div className={`absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent transition-opacity duration-500 ${
-          scrolled ? 'opacity-100' : 'opacity-0'
-        }`} />
-        
         {/* Efeito de brilho na borda inferior */}
         <div className={`absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/60 to-transparent transition-opacity duration-500 ${
           scrolled ? 'opacity-100' : 'opacity-50'
-        }`} />
-        <div className={`absolute bottom-0 left-1/4 w-1/2 h-[2px] bg-blue-500/40 blur-sm transition-all duration-500 ${
-          scrolled ? 'opacity-100 scale-x-110' : 'opacity-50 scale-x-100'
         }`} />
         
         <div className="px-4 sm:px-6 md:px-8 h-14 md:h-16 flex items-center justify-between relative">
@@ -246,28 +238,32 @@ export default function MembersPage() {
           <div className="md:hidden">
             <button 
               onClick={() => setMobileMenuOpen(true)} 
-              className="relative p-2 rounded-lg transition-all duration-300 hover:bg-white/10 group"
+              className="p-2 rounded-lg transition-all duration-300 hover:bg-white/10 group"
             >
-              <Menu size={22} className="relative text-white/80 group-hover:text-blue-400 transition-colors" />
+              <Menu size={22} className="text-white/80 group-hover:text-blue-400 transition-colors" />
             </button>
           </div>
 
-          {/* Logo */}
+          {/* Logo com efeito de glow e animação */}
           <div className="absolute left-1/2 transform -translate-x-1/2 md:relative md:left-0 md:transform-none">
             <div className="relative group cursor-pointer" onClick={() => navigate("/member")}>
+              {/* Efeito de glow ao redor da logo */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-800/40 to-blue-600/40 rounded-lg blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div 
-                className="relative text-xl md:text-2xl font-black tracking-wide text-white"
+                className="relative text-xl md:text-2xl font-black tracking-wide bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
-                  textShadow: "0 0 20px rgba(30, 100, 255, 0.4)"
                 }}
               >
                 SOKACHESKI
               </div>
+              {/* Linha decorativa que aparece no hover */}
+              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent transition-all duration-500" />
             </div>
           </div>
 
-          {/* Menu Desktop */}
+          {/* Menu Desktop com efeitos */}
           <nav className="hidden md:flex items-center gap-8 ml-8">
             {menuLinks.map((link) => (
               <button 
@@ -276,10 +272,13 @@ export default function MembersPage() {
                 className="relative group py-2"
               >
                 <span className="relative flex items-center gap-2 text-white/70 group-hover:text-white transition-colors duration-300">
-                  <link.icon size={16} className="text-blue-400/60 group-hover:text-blue-400 transition-all duration-300" />
+                  <link.icon size={16} className="text-blue-400/60 group-hover:text-blue-400 transition-all duration-300 group-hover:scale-110" />
                   <span className="text-sm tracking-wide">{link.name}</span>
                 </span>
+                {/* Underline animado */}
                 <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-blue-500 to-cyan-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
+                {/* Efeito de fundo suave no hover */}
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/10 group-hover:to-cyan-500/10 transition-all duration-300 -z-10" />
               </button>
             ))}
           </nav>
@@ -293,10 +292,12 @@ export default function MembersPage() {
               <Search size={18} className="text-white/60 hover:text-blue-400 transition-colors" />
             </button>
 
+            {/* Perfil com efeito de anel */}
             <div className="relative group">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-full blur opacity-40 group-hover:opacity-80 transition-opacity duration-300" />
               <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-blue-800 to-blue-600 p-[2px]">
-                <div className="w-full h-full rounded-full bg-black/90 flex items-center justify-center">
-                  <Shield size={14} className="text-blue-400/70" />
+                <div className="w-full h-full rounded-full bg-black/90 flex items-center justify-center group-hover:bg-black/70 transition-all">
+                  <Shield size={14} className="text-blue-400/70 group-hover:text-blue-400 transition-colors group-hover:scale-110 duration-300" />
                 </div>
               </div>
             </div>
@@ -327,7 +328,7 @@ export default function MembersPage() {
           <div className="relative w-80 bg-black/95 backdrop-blur-md h-full shadow-2xl border-r border-blue-900/50 p-6 animate-slide-in-right">
             <div className="flex justify-between items-center mb-8">
               <div 
-                className="text-xl font-black tracking-wide text-white cursor-pointer"
+                className="text-xl font-black tracking-wide bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent cursor-pointer"
                 style={{ fontFamily: "'Playfair Display', serif" }}
                 onClick={() => {
                   navigate("/member");
@@ -351,9 +352,9 @@ export default function MembersPage() {
                     navigate(link.path);
                     setMobileMenuOpen(false);
                   }}
-                  className="flex items-center gap-3 py-3 px-4 hover:bg-white/10 rounded-lg transition-colors"
+                  className="flex items-center gap-3 py-3 px-4 hover:bg-white/10 rounded-lg transition-colors group"
                 >
-                  <link.icon size={20} className="text-blue-400/70" />
+                  <link.icon size={20} className="text-blue-400/70 group-hover:text-blue-400 group-hover:scale-110 transition-all" />
                   <span>{link.name}</span>
                 </button>
               ))}
@@ -420,14 +421,14 @@ export default function MembersPage() {
                       <div
                         key={course._id}
                         onClick={() => handleOpenCourse(course._id, course)}
-                        className={`relative rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-300
+                        className={`relative rounded-xl overflow-hidden flex-shrink-0 transition-all duration-300
                           ${
                             isVertical
                               ? "w-[140px] md:w-[200px] h-[240px] md:h-[340px]"
                               : "min-w-[260px] md:min-w-[340px] h-[150px] md:h-[200px]"
                           }
                           ${isBlocked ? "cursor-default" : "cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"}
-                          border border-blue-900/20 hover:border-blue-500/40
+                          border border-blue-900/20
                         `}
                         style={{
                           animation: `fadeIn 0.5s ease-out ${index * 0.05}s both`
@@ -438,10 +439,10 @@ export default function MembersPage() {
                             <img
                               src={course.image}
                               alt=""
-                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                              className="absolute inset-0 w-full h-full object-cover"
                             />
                             
-                            {/* OVERLAY DE BLOQUEIO - ESSE É IMPORTANTE! */}
+                            {/* OVERLAY DE BLOQUEIO - COM ANIMAÇÃO DO CADEADO E MENSAGEM */}
                             {isPaidAndNotPurchased && (
                               <CourseOverlay 
                                 type="paid" 
@@ -470,7 +471,7 @@ export default function MembersPage() {
                       hoveredSection === section._id ? 'opacity-100' : 'opacity-0 md:opacity-0'
                     }`}
                   >
-                    <ChevronRight size={20} className="text-blue-400/50 group-hover:text-blue-400" />
+                    <ChevronRight size={20} className="text-blue-400/50 hover:text-blue-400" />
                   </button>
                 )}
               </div>
