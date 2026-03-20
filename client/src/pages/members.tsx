@@ -242,38 +242,32 @@ export default function MembersPage() {
         
         <div className="px-4 sm:px-6 md:px-8 h-14 md:h-16 flex items-center justify-between relative">
           
-          {/* Lado Esquerdo - Menu Hambúrguer (Mobile) com efeito glow */}
+          {/* Lado Esquerdo - Menu Hambúrguer (Mobile) */}
           <div className="md:hidden">
             <button 
               onClick={() => setMobileMenuOpen(true)} 
               className="relative p-2 rounded-lg transition-all duration-300 hover:bg-white/10 group"
             >
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-blue-500/0 group-hover:from-blue-500/20 group-hover:to-cyan-500/20 transition-all duration-300" />
               <Menu size={22} className="relative text-white/80 group-hover:text-blue-400 transition-colors" />
             </button>
           </div>
 
-          {/* Logo com efeito glow animado */}
+          {/* Logo */}
           <div className="absolute left-1/2 transform -translate-x-1/2 md:relative md:left-0 md:transform-none">
             <div className="relative group cursor-pointer" onClick={() => navigate("/member")}>
-              {/* Efeito de glow animado */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-800/40 to-blue-600/40 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div 
-                className="relative text-xl md:text-2xl font-black tracking-wide bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent"
+                className="relative text-xl md:text-2xl font-black tracking-wide text-white"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
-                  textShadow: "0 0 30px rgba(30, 100, 255, 0.3)"
+                  textShadow: "0 0 20px rgba(30, 100, 255, 0.4)"
                 }}
               >
                 SOKACHESKI
               </div>
-              {/* Linha decorativa abaixo da logo */}
-              <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-0 group-hover:w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent transition-all duration-500" />
             </div>
           </div>
 
-          {/* Menu Desktop (Computador) com efeitos elegantes */}
+          {/* Menu Desktop */}
           <nav className="hidden md:flex items-center gap-8 ml-8">
             {menuLinks.map((link) => (
               <button 
@@ -282,50 +276,40 @@ export default function MembersPage() {
                 className="relative group py-2"
               >
                 <span className="relative flex items-center gap-2 text-white/70 group-hover:text-white transition-colors duration-300">
-                  <link.icon size={16} className="text-blue-400/60 group-hover:text-blue-400 transition-all duration-300 group-hover:scale-110" />
+                  <link.icon size={16} className="text-blue-400/60 group-hover:text-blue-400 transition-all duration-300" />
                   <span className="text-sm tracking-wide">{link.name}</span>
                 </span>
-                {/* Efeito de underline animado */}
                 <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-gradient-to-r from-blue-500 to-cyan-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-                {/* Efeito de glow no hover */}
-                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/10 group-hover:to-cyan-500/10 transition-all duration-300 -z-10" />
               </button>
             ))}
           </nav>
 
-          {/* Lado Direito - Busca e Perfil com efeitos */}
+          {/* Lado Direito */}
           <div className="flex items-center gap-2 md:gap-3">
-            
-            {/* Botão de Busca com efeito */}
             <button 
               onClick={() => setSearchOpen(!searchOpen)} 
-              className="relative p-2 rounded-lg transition-all duration-300 hover:bg-white/10 group"
+              className="p-2 rounded-lg transition-all duration-300 hover:bg-white/10"
             >
-              <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/20 group-hover:to-cyan-500/20 transition-all duration-300" />
-              <Search size={18} className="relative text-white/60 group-hover:text-blue-400 transition-colors" />
+              <Search size={18} className="text-white/60 hover:text-blue-400 transition-colors" />
             </button>
 
-            {/* Perfil com efeito de anel luminoso */}
             <div className="relative group">
-              {/* Anel luminoso animado */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-full blur opacity-40 group-hover:opacity-80 transition-opacity duration-300 animate-pulse" />
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-700 to-cyan-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-blue-800 to-blue-600 p-[2px]">
-                <div className="w-full h-full rounded-full bg-black/90 flex items-center justify-center group-hover:bg-black/70 transition-all">
-                  <Shield size={14} className="text-blue-400/70 group-hover:text-blue-400 transition-colors group-hover:scale-110 duration-300" />
+                <div className="w-full h-full rounded-full bg-black/90 flex items-center justify-center">
+                  <Shield size={14} className="text-blue-400/70" />
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Barra de Busca Expandida (Mobile) com animação */}
+        {/* Barra de Busca Expandida (Mobile) */}
         <div className={`md:hidden px-4 pb-3 pt-2 border-t border-blue-900/40 bg-black/95 transition-all duration-300 ${searchOpen ? 'block' : 'hidden'}`}>
           <div className="relative">
             <input
               type="text"
               placeholder="Buscar cursos, membros..."
-              className="w-full bg-gradient-to-r from-[#1E293B] to-[#0F172A] rounded-lg px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white border border-blue-900/30 focus:border-blue-500/50 transition-all"
+              className="w-full bg-[#1E293B] rounded-lg px-4 py-2 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-white"
               autoFocus
             />
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400/60" />
@@ -333,70 +317,46 @@ export default function MembersPage() {
         </div>
       </header>
 
-      {/* MENU MOBILE ESTILOSO (Hambúrguer) */}
+      {/* MENU MOBILE */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden">
-          {/* Overlay com blur */}
           <div 
-            className="fixed inset-0 bg-black/90 backdrop-blur-md transition-all duration-300"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
           />
-          
-          {/* Menu Lateral com efeito glassmorphism */}
-          <div className="relative w-80 bg-black/80 backdrop-blur-xl h-full shadow-2xl border-r border-blue-900/50 p-6 transform transition-transform duration-300 animate-slide-in-right">
-            {/* Efeito de brilho superior */}
-            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
-            
+          <div className="relative w-80 bg-black/95 backdrop-blur-md h-full shadow-2xl border-r border-blue-900/50 p-6 animate-slide-in-right">
             <div className="flex justify-between items-center mb-8">
               <div 
-                className="relative group cursor-pointer"
+                className="text-xl font-black tracking-wide text-white cursor-pointer"
+                style={{ fontFamily: "'Playfair Display', serif" }}
                 onClick={() => {
                   navigate("/member");
                   setMobileMenuOpen(false);
                 }}
               >
-                <div 
-                  className="text-xl font-black tracking-wide bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent"
-                  style={{ fontFamily: "'Playfair Display', serif" }}
-                >
-                  SOKACHESKI
-                </div>
-                <div className="absolute -bottom-1 left-0 w-8 h-[2px] bg-gradient-to-r from-blue-500 to-transparent" />
+                SOKACHESKI
               </div>
               <button 
                 onClick={() => setMobileMenuOpen(false)}
-                className="p-2 rounded-lg hover:bg-white/10 transition-all duration-300 group"
+                className="p-2 hover:bg-white/10 rounded-lg"
               >
-                <X size={22} className="text-white/70 group-hover:text-blue-400 transition-colors" />
+                <X size={22} className="text-white/80" />
               </button>
             </div>
-            
             <div className="flex flex-col gap-2">
-              {menuLinks.map((link, index) => (
+              {menuLinks.map((link) => (
                 <button
                   key={link.name}
                   onClick={() => {
                     navigate(link.path);
                     setMobileMenuOpen(false);
                   }}
-                  className="relative group overflow-hidden rounded-lg transition-all duration-300 hover:translate-x-1"
-                  style={{ animation: `fadeIn 0.4s ease-out ${index * 0.1}s both` }}
+                  className="flex items-center gap-3 py-3 px-4 hover:bg-white/10 rounded-lg transition-colors"
                 >
-                  {/* Efeito de fundo gradiente no hover */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${link.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                  <div className="relative flex items-center gap-3 py-3 px-4 text-white/80 group-hover:text-white transition-colors">
-                    <link.icon size={20} className="text-blue-400/70 group-hover:text-blue-400 group-hover:scale-110 transition-all duration-300" />
-                    <span className="font-medium tracking-wide">{link.name}</span>
-                    <Sparkles size={14} className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-blue-400" />
-                  </div>
+                  <link.icon size={20} className="text-blue-400/70" />
+                  <span>{link.name}</span>
                 </button>
               ))}
-            </div>
-
-            {/* Linha decorativa inferior */}
-            <div className="absolute bottom-8 left-6 right-6">
-              <div className="h-[1px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
-              <p className="text-center text-xs text-white/30 mt-4 tracking-wider">SOKACHESKI CORP</p>
             </div>
           </div>
         </div>
@@ -404,24 +364,22 @@ export default function MembersPage() {
 
       {/* CONTEÚDO PRINCIPAL */}
       <div className="pt-24 md:pt-28 pl-4 pr-4 md:pl-12 md:pr-8 pb-16 space-y-12 relative z-10">
-        {/* Banner de boas-vindas com efeito */}
-        <div className="max-w-4xl space-y-3 animate-fade-in">
+        {/* Banner de boas-vindas com animação de digitação */}
+        <div className="max-w-4xl space-y-3">
           <div className="flex items-center gap-2 text-blue-400/60 text-sm tracking-wide">
             <Calendar size={16} className="text-blue-400/80" />
             <span>Hoje é {formattedDate}</span>
           </div>
           <h1 className="text-2xl md:text-4xl font-light">
             <span className="text-white/60">Bem-Vindo de volta,</span>
-            <span className="text-white font-bold ml-2 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">Aristocrata</span>
+            <span className="text-white font-bold ml-2">Aristocrata</span>
           </h1>
           <div className="relative">
-            <p className="text-blue-400/70 text-xs md:text-sm max-w-2xl h-6 flex items-center gap-1">
-              <Zap size={12} className="text-blue-500" />
+            <p className="text-blue-400/70 text-xs md:text-sm max-w-2xl h-6">
               {displayText}
-              {!isTypingComplete && <span className="animate-pulse ml-0.5 text-blue-400">|</span>}
+              {!isTypingComplete && <span className="animate-pulse ml-0.5">|</span>}
             </p>
-            {/* Linha decorativa azul com efeito */}
-            <div className="w-24 h-[2px] bg-gradient-to-r from-blue-500/60 via-blue-400/40 to-transparent mt-4" />
+            <div className="w-24 h-[2px] bg-gradient-to-r from-blue-500/60 to-transparent mt-4" />
           </div>
         </div>
 
@@ -436,13 +394,11 @@ export default function MembersPage() {
               onMouseEnter={() => setHoveredSection(section._id)}
               onMouseLeave={() => setHoveredSection(null)}
             >
-              {/* Título da seção com efeito */}
-              <h2 className="text-xl md:text-3xl font-semibold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+              <h2 className="text-xl md:text-3xl font-semibold text-white">
                 {section.title}
               </h2>
 
               <div className="relative">
-                {/* Container do slider */}
                 <div
                   ref={(el) => {
                     slidersRef.current[section._id] = el;
@@ -464,13 +420,13 @@ export default function MembersPage() {
                       <div
                         key={course._id}
                         onClick={() => handleOpenCourse(course._id, course)}
-                        className={`relative rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20
+                        className={`relative rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-300
                           ${
                             isVertical
                               ? "w-[140px] md:w-[200px] h-[240px] md:h-[340px]"
                               : "min-w-[260px] md:min-w-[340px] h-[150px] md:h-[200px]"
                           }
-                          ${isBlocked ? "cursor-default hover:scale-100" : "cursor-pointer"}
+                          ${isBlocked ? "cursor-default" : "cursor-pointer hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20"}
                           border border-blue-900/20 hover:border-blue-500/40
                         `}
                         style={{
@@ -482,10 +438,10 @@ export default function MembersPage() {
                             <img
                               src={course.image}
                               alt=""
-                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                             />
                             
-                            {/* OVERLAY DE BLOQUEIO */}
+                            {/* OVERLAY DE BLOQUEIO - ESSE É IMPORTANTE! */}
                             {isPaidAndNotPurchased && (
                               <CourseOverlay 
                                 type="paid" 
@@ -499,9 +455,6 @@ export default function MembersPage() {
                                 releaseDays={course.releaseDays}
                               />
                             )}
-
-                            {/* Overlay gradiente no hover */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                           </>
                         )}
                       </div>
@@ -509,19 +462,15 @@ export default function MembersPage() {
                   })}
                 </div>
 
-                {/* SETA DIREITA com efeito */}
+                {/* SETA DIREITA */}
                 {courses.length >= 5 && showRightArrow[section._id] && (
                   <button
                     onClick={() => scroll(section._id, "right")}
-                    className={`absolute -right-2 md:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-12 md:h-12 bg-black/80 backdrop-blur-sm border border-blue-800/40 rounded-full flex items-center justify-center hover:bg-blue-950/60 hover:border-blue-600/60 transition-all duration-300 group ${
+                    className={`absolute -right-2 md:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-12 md:h-12 bg-black/80 backdrop-blur-sm border border-blue-800/40 rounded-full flex items-center justify-center hover:bg-blue-950/60 hover:border-blue-600/60 transition-all duration-300 ${
                       hoveredSection === section._id ? 'opacity-100' : 'opacity-0 md:opacity-0'
                     }`}
                   >
-                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/0 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <ChevronRight 
-                      size={20} 
-                      className="text-blue-400/50 group-hover:text-blue-400 group-hover:translate-x-1 transition-all relative" 
-                    />
+                    <ChevronRight size={20} className="text-blue-400/50 group-hover:text-blue-400" />
                   </button>
                 )}
               </div>
@@ -530,38 +479,16 @@ export default function MembersPage() {
         })}
       </div>
 
-      {/* Estilos globais adicionais */}
       <style>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(20px);
           }
           to {
             opacity: 1;
             transform: translateY(0);
           }
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-        
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-out forwards;
-        }
-        
-        .animate-slide-in-right {
-          animation: slideInRight 0.3s ease-out forwards;
         }
         
         @keyframes slideInRight {
@@ -575,24 +502,17 @@ export default function MembersPage() {
           }
         }
         
-        /* Scrollbar personalizada */
-        ::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
+        .animate-slide-in-right {
+          animation: slideInRight 0.3s ease-out forwards;
         }
         
-        ::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.3);
-          border-radius: 10px;
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
         
-        ::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, rgba(30, 100, 255, 0.4), rgba(0, 200, 255, 0.2));
-          border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, rgba(30, 100, 255, 0.6), rgba(0, 200, 255, 0.4));
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </div>
