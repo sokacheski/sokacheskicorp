@@ -343,7 +343,7 @@ export default function MembersPage() {
           />
           
           {/* Menu Lateral com efeito glassmorphism */}
-          <div className="relative w-80 bg-black/80 backdrop-blur-xl h-full shadow-2xl border-r border-blue-900/50 p-6 transform transition-transform duration-300 animate-slide-in-right">
+          <div className="relative w-80 bg-black/80 backdrop-blur-xl h-full shadow-2xl border-r border-blue-900/50 p-6 transform transition-transform duration-300 animate-slideIn">
             {/* Efeito de brilho superior */}
             <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
             
@@ -380,7 +380,7 @@ export default function MembersPage() {
                     setMobileMenuOpen(false);
                   }}
                   className="relative group overflow-hidden rounded-lg transition-all duration-300 hover:translate-x-1"
-                  style={{ animation: `fadeIn 0.4s ease-out ${index * 0.1}s both` }}
+                  style={{ animation: `fadeInUp 0.4s ease-out ${index * 0.1}s both` }}
                 >
                   {/* Efeito de fundo gradiente no hover */}
                   <div className={`absolute inset-0 bg-gradient-to-r ${link.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -405,7 +405,7 @@ export default function MembersPage() {
       {/* CONTEÚDO PRINCIPAL */}
       <div className="pt-24 md:pt-28 pl-4 pr-4 md:pl-12 md:pr-8 pb-16 space-y-12 relative z-10">
         {/* Banner de boas-vindas com efeito */}
-        <div className="max-w-4xl space-y-3 animate-fade-in">
+        <div className="max-w-4xl space-y-3 animate-fadeInUp">
           <div className="flex items-center gap-2 text-blue-400/60 text-sm tracking-wide">
             <Calendar size={16} className="text-blue-400/80" />
             <span>Hoje é {formattedDate}</span>
@@ -474,7 +474,7 @@ export default function MembersPage() {
                           border border-blue-900/20 hover:border-blue-500/40
                         `}
                         style={{
-                          animation: `fadeIn 0.5s ease-out ${index * 0.05}s both`
+                          animation: `fadeInUp 0.5s ease-out ${index * 0.05}s both`
                         }}
                       >
                         {course.image && (
@@ -530,17 +530,54 @@ export default function MembersPage() {
         })}
       </div>
 
-      {/* Estilos globais adicionais */}
+      {/* Estilos globais com animações */}
       <style>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
           }
           to {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+        
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateX(-100%);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        
+        .animate-fadeInUp {
+          animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .animate-slideIn {
+          animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        .animate-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         
         @keyframes pulse {
@@ -549,29 +586,6 @@ export default function MembersPage() {
           }
           50% {
             opacity: 0.5;
-          }
-        }
-        
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        .animate-fade-in {
-          animation: fadeIn 0.5s ease-out forwards;
-        }
-        
-        .animate-slide-in-right {
-          animation: slideInRight 0.3s ease-out forwards;
-        }
-        
-        @keyframes slideInRight {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
           }
         }
         
@@ -593,6 +607,16 @@ export default function MembersPage() {
         
         ::-webkit-scrollbar-thumb:hover {
           background: linear-gradient(to bottom, rgba(30, 100, 255, 0.6), rgba(0, 200, 255, 0.4));
+        }
+        
+        /* Esconde scrollbar no mobile mas mantém funcionalidade */
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </div>
