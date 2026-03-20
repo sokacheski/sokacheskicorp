@@ -28,7 +28,6 @@ body {
   }
 }
 
-
 .glitch {
   position: relative;
   text-shadow:
@@ -85,4 +84,42 @@ body {
 
 body {
   -ms-overflow-style: none;
+}
+
+/* Estilos adicionais para responsividade mobile */
+@media (max-width: 768px) {
+  /* Ajustes específicos para mobile */
+  .course-card-mobile {
+    width: 140px;
+    height: 240px;
+  }
+  
+  .course-card-horizontal-mobile {
+    min-width: 260px;
+    height: 150px;
+  }
+}
+
+/* Animação de brilho para elementos */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(0, 100, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 100, 255, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(0, 100, 255, 0.2);
+  }
+}
+
+.glow-animation {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* Efeito de transição suave */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
