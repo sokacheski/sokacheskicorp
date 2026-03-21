@@ -48,6 +48,82 @@ export default function MembersPage() {
 
   const fullText = "Pequenas ações geram grandes resultados.";
 
+  // ============================================================
+  // BLOQUEIO TOTAL DE TRADUÇÃO - MÚLTIPLAS CAMADAS DE PROTEÇÃO
+  // ============================================================
+  useEffect(() => {
+    // 1. Desabilita tradução via atributo HTML (mais comum)
+    document.documentElement.setAttribute('translate', 'no');
+    document.body.setAttribute('translate', 'no');
+    
+    // 2. Força o idioma da página para português (evita detecção automática)
+    document.documentElement.lang = 'pt-BR';
+    document.documentElement.setAttribute('xml:lang', 'pt-BR');
+    
+    // 3. Remove qualquer meta tag de tradução que possa existir
+    const metaTags = document.querySelectorAll('meta[name="google"]');
+    metaTags.forEach(tag => tag.remove());
+    
+    // 4. Adiciona meta tag que impede tradução (Google Chrome)
+    const meta = document.createElement('meta');
+    meta.name = 'google';
+    meta.content = 'notranslate';
+    document.head.appendChild(meta);
+    
+    // 5. Adiciona meta tag para outros navegadores (Microsoft Edge, etc.)
+    const meta2 = document.createElement('meta');
+    meta2.name = 'microsoft';
+    meta2.content = 'notranslate';
+    document.head.appendChild(meta2);
+    
+    // 6. Configura o HTML para nunca sugerir tradução
+    document.documentElement.style.webkitTextSizeAdjust = '100%';
+    
+    // 7. Adiciona classe global para desabilitar tradução em elementos dinâmicos
+    const style = document.createElement('style');
+    style.textContent = `
+      /* Desabilita tradução em qualquer elemento da página */
+      * {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+      }
+      
+      /* Força que nenhum elemento seja traduzido */
+      body, html, div, span, p, h1, h2, h3, h4, h5, h6, a, button, input, textarea {
+        -webkit-text-fill-color: currentColor !important;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // 8. Observador de mutação para garantir que novos elementos também tenham o atributo
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) { // Elemento HTML
+              const element = node as HTMLElement;
+              element.setAttribute('translate', 'no');
+              // Recursivamente aplica aos filhos
+              element.querySelectorAll('*').forEach((child) => {
+                child.setAttribute('translate', 'no');
+              });
+            }
+          });
+        }
+      });
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+    
+    // Cleanup
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   // Efeito de digitação
   useEffect(() => {
     if (!loading) {
@@ -178,7 +254,7 @@ export default function MembersPage() {
 
   if (isInternalRoute) {
     return (
-      <div className="min-h-screen bg-black text-white">
+      <div className="min-h-screen bg-black text-white" translate="no">
         <MarketBackground />
         <Outlet />
       </div>
@@ -187,7 +263,7 @@ export default function MembersPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center bg-black" translate="no">
         <MarketBackground />
         <div className="relative z-10 flex flex-col items-center">
           <div className="w-16 h-16 border-2 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mb-4" />
@@ -198,7 +274,7 @@ export default function MembersPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-black text-white">
+    <div className="relative min-h-screen bg-black text-white" translate="no">
       {/* Background com efeitos de azul */}
       <div className="fixed inset-0 bg-black">
         {/* Grid com azul */}
@@ -329,7 +405,7 @@ export default function MembersPage() {
 
       {/* MENU MOBILE (Hambúrguer) */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
+        <div className="fixed inset-0 z-50 flex md:hidden" translate="no">
           {/* Overlay escuro */}
           <div 
             className="fixed inset-0 bg-black/80 backdrop-blur-sm"
@@ -459,7 +535,7 @@ export default function MembersPage() {
                               className="absolute inset-0 w-full h-full object-cover"
                             />
                             
-                            {/* OVERLAY DE BLOQUEIO - SEMPRE VISÍVEL */}
+                            {/* OVERLAY DE BLOQUEIO */}
                             {isPaidAndNotPurchased && (
                               <CourseOverlay 
                                 type="paid" 
