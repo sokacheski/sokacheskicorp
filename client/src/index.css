@@ -2,8 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* Bloqueio total de scroll bounce / rubber band effect */
+html, body {
   @apply bg-black text-white antialiased;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Container principal com scroll controlado */
+#root {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Remove qualquer bounce no scroll */
+* {
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @layer utilities {
