@@ -459,7 +459,7 @@ export default function MembersPage() {
                               className="absolute inset-0 w-full h-full object-cover"
                             />
                             
-                            {/* OVERLAY DE BLOQUEIO */}
+                            {/* OVERLAY DE BLOQUEIO - SEMPRE VISÍVEL */}
                             {isPaidAndNotPurchased && (
                               <CourseOverlay 
                                 type="paid" 
