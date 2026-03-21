@@ -43,6 +43,7 @@ export default function MembersPage() {
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [hoveredCourse, setHoveredCourse] = useState<string | null>(null);
 
   const slidersRef = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -459,12 +460,17 @@ export default function MembersPage() {
                     const isPaidAndNotPurchased = course.isPaid && !course.purchased;
                     const isScheduled = course.releaseDays && course.releaseDays > 0;
                     const isBlocked = isPaidAndNotPurchased || isScheduled;
+                    const courseId = course._id;
 
                     return (
                       <div
-                        key={course._id}
-                        onClick={() => handleOpenCourse(course._id, course)}
-                        className={`relative rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20
+                        key={courseId}
+                        onClick={() => handleOpenCourse(courseId, course)}
+                        onMouseEnter={() => setHoveredCourse(courseId)}
+                        onMouseLeave={() => setHoveredCourse(null)}
+                        onTouchStart={() => setHoveredCourse(courseId)}
+                        onTouchEnd={() => setHoveredCourse(null)}
+                        className={`relative rounded-xl overflow-hidden flex-shrink-0 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20
                           ${
                             isVertical
                               ? "w-[140px] md:w-[200px] h-[240px] md:h-[340px]"
@@ -485,23 +491,20 @@ export default function MembersPage() {
                               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                             />
                             
-                            {/* OVERLAY DE BLOQUEIO */}
-                            {isPaidAndNotPurchased && (
-                              <CourseOverlay 
-                                type="paid" 
-                                salesUrl={course.salesUrl}
-                              />
+                            {/* OVERLAY DE BLOQUEIO COM HOVER/TOUCH */}
+                            {isBlocked && (
+                              <div 
+                                className={`absolute inset-0 z-10 transition-opacity duration-300 ${
+                                  hoveredCourse === courseId ? 'opacity-100' : 'opacity-0'
+                                }`}
+                              >
+                                <CourseOverlay 
+                                  type={isPaidAndNotPurchased ? "paid" : "scheduled"} 
+                                  salesUrl={course.salesUrl}
+                                  releaseDays={course.releaseDays}
+                                />
+                              </div>
                             )}
-                            
-                            {isScheduled && (
-                              <CourseOverlay 
-                                type="scheduled" 
-                                releaseDays={course.releaseDays}
-                              />
-                            )}
-
-                            {/* Overlay gradiente no hover */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                           </>
                         )}
                       </div>
