@@ -43,7 +43,6 @@ export default function MembersPage() {
   const [isTypingComplete, setIsTypingComplete] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [hoveredCourse, setHoveredCourse] = useState<string | null>(null);
 
   const slidersRef = useRef<Record<string, HTMLDivElement | null>>({});
 
@@ -437,8 +436,8 @@ export default function MembersPage() {
               onMouseEnter={() => setHoveredSection(section._id)}
               onMouseLeave={() => setHoveredSection(null)}
             >
-              {/* Título da seção */}
-              <h2 className="text-xl md:text-3xl font-semibold text-white">
+              {/* Título da seção com efeito */}
+              <h2 className="text-xl md:text-3xl font-semibold bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
                 {section.title}
               </h2>
 
@@ -460,27 +459,22 @@ export default function MembersPage() {
                     const isPaidAndNotPurchased = course.isPaid && !course.purchased;
                     const isScheduled = course.releaseDays && course.releaseDays > 0;
                     const isBlocked = isPaidAndNotPurchased || isScheduled;
-                    const courseId = course._id;
 
                     return (
                       <div
-                        key={courseId}
-                        onClick={() => handleOpenCourse(courseId, course)}
-                        onMouseEnter={() => setHoveredCourse(courseId)}
-                        onMouseLeave={() => setHoveredCourse(null)}
-                        onTouchStart={() => setHoveredCourse(courseId)}
-                        onTouchEnd={() => setHoveredCourse(null)}
-                        className={`relative rounded-xl overflow-hidden flex-shrink-0 transition-all duration-300
+                        key={course._id}
+                        onClick={() => handleOpenCourse(course._id, course)}
+                        className={`relative rounded-xl overflow-hidden cursor-pointer flex-shrink-0 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20
                           ${
                             isVertical
                               ? "w-[140px] md:w-[200px] h-[240px] md:h-[340px]"
                               : "min-w-[260px] md:min-w-[340px] h-[150px] md:h-[200px]"
                           }
-                          ${isBlocked ? "cursor-default" : "cursor-pointer"}
-                          border border-blue-900/20
+                          ${isBlocked ? "cursor-default hover:scale-100" : "cursor-pointer"}
+                          border border-blue-900/20 hover:border-blue-500/40
                         `}
                         style={{
-                          animation: `fadeIn 0.5s ease-out ${index * 0.05}s both`
+                          animation: `fadeInUp 0.5s ease-out ${index * 0.05}s both`
                         }}
                       >
                         {course.image && (
@@ -488,25 +482,26 @@ export default function MembersPage() {
                             <img
                               src={course.image}
                               alt=""
-                              className="absolute inset-0 w-full h-full object-cover"
+                              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                             />
                             
-                            {/* OVERLAY DE BLOQUEIO - SEMPRE VISÍVEL COM EFEITO DE SUBIR NO HOVER */}
-                            {isBlocked && (
-                              <div 
-                                className={`absolute inset-0 z-10 transition-all duration-300 ${
-                                  hoveredCourse === courseId 
-                                    ? 'translate-y-0' 
-                                    : 'translate-y-full'
-                                }`}
-                              >
-                                <CourseOverlay 
-                                  type={isPaidAndNotPurchased ? "paid" : "scheduled"} 
-                                  salesUrl={course.salesUrl}
-                                  releaseDays={course.releaseDays}
-                                />
-                              </div>
+                            {/* OVERLAY DE BLOQUEIO */}
+                            {isPaidAndNotPurchased && (
+                              <CourseOverlay 
+                                type="paid" 
+                                salesUrl={course.salesUrl}
+                              />
                             )}
+                            
+                            {isScheduled && (
+                              <CourseOverlay 
+                                type="scheduled" 
+                                releaseDays={course.releaseDays}
+                              />
+                            )}
+
+                            {/* Overlay gradiente no hover */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                           </>
                         )}
                       </div>
@@ -514,15 +509,19 @@ export default function MembersPage() {
                   })}
                 </div>
 
-                {/* SETA DIREITA */}
+                {/* SETA DIREITA com efeito */}
                 {courses.length >= 5 && showRightArrow[section._id] && (
                   <button
                     onClick={() => scroll(section._id, "right")}
-                    className={`absolute -right-2 md:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-12 md:h-12 bg-black/80 backdrop-blur-sm border border-blue-800/40 rounded-full flex items-center justify-center hover:bg-blue-950/60 hover:border-blue-600/60 transition-all duration-300 ${
+                    className={`absolute -right-2 md:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 md:w-12 md:h-12 bg-black/80 backdrop-blur-sm border border-blue-800/40 rounded-full flex items-center justify-center hover:bg-blue-950/60 hover:border-blue-600/60 transition-all duration-300 group ${
                       hoveredSection === section._id ? 'opacity-100' : 'opacity-0 md:opacity-0'
                     }`}
                   >
-                    <ChevronRight size={20} className="text-blue-400/50 hover:text-blue-400" />
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/0 to-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ChevronRight 
+                      size={20} 
+                      className="text-blue-400/50 group-hover:text-blue-400 group-hover:translate-x-1 transition-all relative" 
+                    />
                   </button>
                 )}
               </div>
@@ -531,9 +530,18 @@ export default function MembersPage() {
         })}
       </div>
 
-      {/* Estilos globais */}
+      {/* Estilos globais com animações */}
       <style>{`
         @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes fadeInUp {
           from {
             opacity: 0;
             transform: translateY(20px);
@@ -546,19 +554,62 @@ export default function MembersPage() {
         
         @keyframes slideIn {
           from {
-            transform: translateX(-100%);
             opacity: 0;
+            transform: translateX(-100%);
           }
           to {
-            transform: translateX(0);
             opacity: 1;
+            transform: translateX(0);
           }
+        }
+        
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        
+        .animate-fadeInUp {
+          animation: fadeInUp 0.6s ease-out forwards;
         }
         
         .animate-slideIn {
           animation: slideIn 0.3s ease-out forwards;
         }
         
+        .animate-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+        
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+          width: 6px;
+          height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+          background: linear-gradient(to bottom, rgba(30, 100, 255, 0.4), rgba(0, 200, 255, 0.2));
+          border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+          background: linear-gradient(to bottom, rgba(30, 100, 255, 0.6), rgba(0, 200, 255, 0.4));
+        }
+        
+        /* Esconde scrollbar no mobile mas mantém funcionalidade */
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
