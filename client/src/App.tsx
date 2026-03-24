@@ -9,6 +9,7 @@ import Gamification from "./components/sidebar/gamification";
 import Communities from "./components/sidebar/communities";
 import Config from "./components/sidebar/config";
 import MembersLayout from "./pages/members";
+import ProfilePage from "./pages/ProfilePage";
 import { RequireAuth, RequireAdmin } from "./routes/guards";
 import CourseView from "./pages/CourseView";
 import LessonView from "./pages/LessonView";
@@ -56,6 +57,7 @@ function App() {
           <Route index element={<Members />} />
           <Route path="curso/:id" element={<CourseView />} />
           <Route path="modulo/:moduleId/aula/:lessonId" element={<LessonView />} />
+          <Route path="perfil" element={<ProfilePage />} />
         </Route>
 
         {/* ================= FALLBACK ================= */}

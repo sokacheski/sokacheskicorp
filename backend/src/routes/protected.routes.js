@@ -18,6 +18,65 @@ router.get("/member", authMiddleware, memberOnly, (req, res) => {
 });
 
 /* =========================
+   👤 PERFIL DO USUÁRIO LOGADO
+========================= */
+
+// 📋 Buscar dados do usuário logado
+router.get("/me", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId).select("-password -resetPasswordCode -resetPasswordExpires");
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+    return res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        createdAt: user.createdAt,
+        lastLogin: user.lastLogin
+      }
+    });
+  } catch (error) {
+    console.error("GET ME ERROR:", error);
+    return res.status(500).json({ message: "Erro ao buscar usuário" });
+  }
+});
+
+// ✏️ Atualizar perfil do usuário logado
+router.put("/profile", authMiddleware, async (req, res) => {
+  try {
+    const { name, email, phone } = req.body;
+    
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    if (name) user.name = name;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+
+    await user.save();
+
+    return res.json({
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.error("UPDATE PROFILE ERROR:", error);
+    return res.status(500).json({ message: "Erro ao atualizar perfil" });
+  }
+});
+
+/* =========================
    👥 USUÁRIOS (ADMIN)
 ========================= */
 

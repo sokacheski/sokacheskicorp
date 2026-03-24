@@ -5,9 +5,10 @@ import {
   Outlet,
 } from "react-router-dom";
 import { api } from "../services/api";
-import { Search, ChevronRight, Users, TrendingUp, Home, Shield, Calendar, Menu, X } from "lucide-react";
+import { Search, ChevronRight, Users, TrendingUp, Home, Shield, Calendar, Menu, UserCircle } from "lucide-react";
 import MarketBackground from "../seels/MarketBackground";
 import CourseOverlay from "../CourseOverlay";
+import { useUser } from "../contexts/UserContext";
 
 interface Section {
   _id: string;
@@ -30,6 +31,7 @@ interface Course {
 export default function MembersPage() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, loading: userLoading } = useUser();
 
   const [sections, setSections] = useState<Section[]>([]);
   const [coursesBySection, setCoursesBySection] = useState<
@@ -52,58 +54,45 @@ export default function MembersPage() {
   // BLOQUEIO TOTAL DE TRADUÇÃO - MÚLTIPLAS CAMADAS DE PROTEÇÃO
   // ============================================================
   useEffect(() => {
-    // 1. Desabilita tradução via atributo HTML (mais comum)
     document.documentElement.setAttribute('translate', 'no');
     document.body.setAttribute('translate', 'no');
-    
-    // 2. Força o idioma da página para português (evita detecção automática)
     document.documentElement.lang = 'pt-BR';
     document.documentElement.setAttribute('xml:lang', 'pt-BR');
     
-    // 3. Remove qualquer meta tag de tradução que possa existir
     const metaTags = document.querySelectorAll('meta[name="google"]');
     metaTags.forEach(tag => tag.remove());
     
-    // 4. Adiciona meta tag que impede tradução (Google Chrome)
     const meta = document.createElement('meta');
     meta.name = 'google';
     meta.content = 'notranslate';
     document.head.appendChild(meta);
     
-    // 5. Adiciona meta tag para outros navegadores (Microsoft Edge, etc.)
     const meta2 = document.createElement('meta');
     meta2.name = 'microsoft';
     meta2.content = 'notranslate';
     document.head.appendChild(meta2);
     
-    // 6. Configura o HTML para nunca sugerir tradução
     document.documentElement.style.webkitTextSizeAdjust = '100%';
     
-    // 7. Adiciona classe global para desabilitar tradução em elementos dinâmicos
     const style = document.createElement('style');
     style.textContent = `
-      /* Desabilita tradução em qualquer elemento da página */
       * {
         -webkit-text-size-adjust: 100%;
         text-size-adjust: 100%;
       }
-      
-      /* Força que nenhum elemento seja traduzido */
       body, html, div, span, p, h1, h2, h3, h4, h5, h6, a, button, input, textarea {
         -webkit-text-fill-color: currentColor !important;
       }
     `;
     document.head.appendChild(style);
     
-    // 8. Observador de mutação para garantir que novos elementos também tenham o atributo
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === 1) { // Elemento HTML
+            if (node.nodeType === 1) {
               const element = node as HTMLElement;
               element.setAttribute('translate', 'no');
-              // Recursivamente aplica aos filhos
               element.querySelectorAll('*').forEach((child) => {
                 child.setAttribute('translate', 'no');
               });
@@ -118,7 +107,6 @@ export default function MembersPage() {
       subtree: true,
     });
     
-    // Cleanup
     return () => {
       observer.disconnect();
     };
@@ -252,6 +240,13 @@ export default function MembersPage() {
     { name: "Ranking", icon: TrendingUp, path: "/member/ranking" },
   ];
 
+  // Links da barra inferior (mobile)
+  const bottomNavLinks = [
+    { name: "Início", icon: Home, path: "/member" },
+    { name: "Comunidades", icon: Users, path: "/member/comunidade" },
+    { name: "Perfil", icon: UserCircle, path: "/member/perfil" },
+  ];
+
   if (isInternalRoute) {
     return (
       <div className="min-h-screen bg-black text-white" translate="no">
@@ -277,25 +272,20 @@ export default function MembersPage() {
     <div className="relative min-h-screen bg-black text-white" translate="no">
       {/* Background com efeitos de azul */}
       <div className="fixed inset-0 bg-black">
-        {/* Grid com azul */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(0,100,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,100,255,0.03)_1px,transparent_1px)] bg-[size:80px_80px]" />
-        
-        {/* Gradientes radiais com azul */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(0,50,150,0.15)_0%,transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(0,30,100,0.15)_0%,transparent_60%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,80,200,0.05)_0%,transparent_50%)]" />
-        
-        {/* Manchas de luz azul */}
         <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-blue-900/20 via-blue-800/10 to-transparent" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-800/10 rounded-full blur-3xl" />
         <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-blue-700/10 rounded-full blur-3xl" />
       </div>
       
-      {/* TOPBAR RESPONSIVO */}
+      {/* TOPBAR RESPONSIVO - TRANSPARENTE NO MOBILE */}
       <header className={`fixed top-0 left-0 w-full z-40 transition-all duration-500 ${
         scrolled 
           ? 'bg-black/95 backdrop-blur-md border-b border-blue-900/60' 
-          : 'bg-black/80 backdrop-blur-sm border-b border-blue-900/30'
+          : 'bg-black/60 backdrop-blur-sm border-b border-blue-900/30'
       }`}>
         {/* Efeito de brilho na borda */}
         <div className={`absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/60 to-transparent transition-opacity duration-500 ${
@@ -307,7 +297,7 @@ export default function MembersPage() {
         
         <div className="px-4 sm:px-6 md:px-8 h-16 flex items-center justify-between relative">
           
-          {/* Lado Esquerdo - Menu Hambúrguer (Mobile) */}
+          {/* Lado Esquerdo - Menu Hambúrguer (Mobile e Desktop) */}
           <div className="md:hidden">
             <button 
               onClick={() => setMobileMenuOpen(true)} 
@@ -319,15 +309,14 @@ export default function MembersPage() {
 
           {/* Logo - Centralizado no Mobile, Esquerda no Desktop */}
           <div className="absolute left-1/2 transform -translate-x-1/2 md:relative md:left-0 md:transform-none">
-            <div className="relative group">
+            <div className="relative group cursor-pointer" onClick={() => navigate("/member")}>
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-800/40 to-blue-600/40 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition" />
               <div 
-                className="relative text-xl md:text-2xl font-black tracking-wide text-white cursor-pointer"
+                className="relative text-xl md:text-2xl font-black tracking-wide text-white"
                 style={{ 
                   fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
                   textShadow: "0 0 20px rgba(30, 100, 255, 0.4)"
                 }}
-                onClick={() => navigate("/member")}
               >
                 SOKACHESKI
               </div>
@@ -375,12 +364,12 @@ export default function MembersPage() {
               <Search size={20} className="text-white/60 group-hover:text-blue-400 transition" />
             </button>
 
-            {/* Perfil */}
+            {/* Perfil - Ícone UserCircle */}
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-700 to-blue-500 rounded-full blur opacity-40 group-hover:opacity-70 transition" />
               <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-blue-800 to-blue-600 p-[2px]">
                 <div className="w-full h-full rounded-full bg-black/90 flex items-center justify-center">
-                  <Shield size={14} className="md:text-base text-blue-400/70 group-hover:text-blue-400 transition" />
+                  <UserCircle size={16} className="text-blue-400/70 group-hover:text-blue-400 transition" />
                 </div>
               </div>
             </div>
@@ -403,57 +392,86 @@ export default function MembersPage() {
         )}
       </header>
 
-      {/* MENU MOBILE (Hambúrguer) */}
+      {/* MENU MOBILE PROFISSIONAL - FUNDO PRETO */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-50 flex md:hidden" translate="no">
-          {/* Overlay escuro */}
+          {/* Overlay - clicar fora fecha o menu */}
           <div 
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300"
             onClick={() => setMobileMenuOpen(false)}
           />
           
-          {/* Menu Lateral */}
-          <div className="relative w-72 bg-black/95 backdrop-blur-md h-full shadow-2xl border-r border-blue-900/50 p-6">
-            <div className="flex justify-between items-center mb-8">
-              <div 
-                className="text-xl font-black tracking-wide text-white cursor-pointer"
-                style={{ fontFamily: "'Playfair Display', serif" }}
-                onClick={() => {
-                  navigate("/member");
-                  setMobileMenuOpen(false);
-                }}
-              >
+          {/* Menu Lateral - fundo preto */}
+          <div className="relative w-72 h-full bg-black shadow-2xl p-6 transform transition-transform duration-300 translate-x-0">
+            {/* Logo Area - apenas SOKACHESKI */}
+            <div className="mb-8 text-center">
+              <h1 className="text-xl font-bold tracking-wider text-white">
                 SOKACHESKI
-              </div>
-              <button 
-                onClick={() => setMobileMenuOpen(false)}
-                className="p-2 hover:bg-white/10 rounded-lg"
-              >
-                <X size={22} className="text-white/80" />
-              </button>
+              </h1>
             </div>
-            
-            <div className="flex flex-col gap-2">
-              {menuLinks.map((link) => (
-                <button
-                  key={link.name}
-                  onClick={() => {
-                    navigate(link.path);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center gap-3 py-3 px-4 hover:bg-white/10 rounded-lg transition-colors text-white/80 hover:text-white group"
-                >
-                  <link.icon size={20} className="text-blue-400/70 group-hover:text-blue-400" />
-                  <span>{link.name}</span>
-                </button>
-              ))}
-            </div>
+
+            {/* Navegação */}
+            <nav className="flex flex-col gap-1">
+              {menuLinks.map((link) => {
+                const isActive = location.pathname === link.path;
+                return (
+                  <button
+                    key={link.name}
+                    onClick={() => {
+                      navigate(link.path);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-all duration-200 group
+                      ${isActive 
+                        ? "bg-blue-950/80 text-blue-400 border-l-4 border-blue-600" 
+                        : "text-gray-400 hover:text-gray-300 hover:bg-white/5"
+                      }`}
+                  >
+                    <link.icon 
+                      size={18} 
+                      className={`transition-colors ${
+                        isActive 
+                          ? 'text-blue-400' 
+                          : 'text-gray-500 group-hover:text-gray-400'
+                      }`} 
+                    />
+                    <span className="flex-1 text-left">{link.name}</span>
+                    {isActive && (
+                      <span className="w-1 h-1 rounded-full bg-blue-500" />
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
           </div>
         </div>
       )}
 
-      {/* CONTEÚDO PRINCIPAL */}
-      <div className="pt-28 pl-4 pr-4 md:pl-12 md:pr-8 pb-16 space-y-12 relative z-10">
+      {/* BOTTOM NAVIGATION BAR - APENAS MOBILE */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-md border-t border-blue-900/50">
+        <div className="flex items-center justify-around py-2">
+          {bottomNavLinks.map((link) => {
+            const isActive = location.pathname === link.path;
+            return (
+              <button
+                key={link.name}
+                onClick={() => navigate(link.path)}
+                className={`flex flex-col items-center gap-1 py-1 px-3 rounded-lg transition-all duration-200 ${
+                  isActive 
+                    ? 'text-blue-400' 
+                    : 'text-white/60 hover:text-white'
+                }`}
+              >
+                <link.icon size={22} className={isActive ? 'text-blue-400' : 'text-current'} />
+                <span className="text-[10px] font-medium tracking-wide">{link.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* CONTEÚDO PRINCIPAL - COM ESPAÇO PARA A BARRA INFERIOR */}
+      <div className="pt-20 md:pt-28 pl-4 pr-4 md:pl-12 md:pr-8 pb-20 md:pb-16 space-y-12 relative z-10">
         {/* Banner de boas-vindas */}
         <div className="max-w-4xl space-y-3">
           <div className="flex items-center gap-2 text-blue-400/60 text-sm tracking-wide">
@@ -462,14 +480,15 @@ export default function MembersPage() {
           </div>
           <h1 className="text-2xl md:text-4xl font-light">
             <span className="text-white/60">Bem-Vindo de volta,</span>
-            <span className="text-white font-bold ml-2">Aristocrata</span>
+            <span className="text-white font-bold ml-2">
+              {userLoading ? '...' : user?.name || 'Aristocrata'}
+            </span>
           </h1>
           <div className="relative">
             <p className="text-blue-400/70 text-xs md:text-sm max-w-2xl h-6">
               {displayText}
               {!isTypingComplete && <span className="animate-pulse ml-0.5">|</span>}
             </p>
-            {/* Linha decorativa azul */}
             <div className="w-24 h-[2px] bg-gradient-to-r from-blue-500/60 to-transparent mt-4" />
           </div>
         </div>
@@ -485,13 +504,11 @@ export default function MembersPage() {
               onMouseEnter={() => setHoveredSection(section._id)}
               onMouseLeave={() => setHoveredSection(null)}
             >
-              {/* Título da seção */}
               <h2 className="text-xl md:text-3xl font-semibold text-white">
                 {section.title}
               </h2>
 
               <div className="relative">
-                {/* Container do slider */}
                 <div
                   ref={(el) => {
                     slidersRef.current[section._id] = el;
@@ -535,11 +552,11 @@ export default function MembersPage() {
                               className="absolute inset-0 w-full h-full object-cover"
                             />
                             
-                            {/* OVERLAY DE BLOQUEIO - SEMPRE VISÍVEL E CENTRALIZADO */}
                             {isPaidAndNotPurchased && (
                               <CourseOverlay 
                                 type="paid" 
                                 salesUrl={course.salesUrl}
+                                isVertical={isVertical}
                               />
                             )}
                             
@@ -547,6 +564,7 @@ export default function MembersPage() {
                               <CourseOverlay 
                                 type="scheduled" 
                                 releaseDays={course.releaseDays}
+                                isVertical={isVertical}
                               />
                             )}
                           </>
@@ -556,7 +574,6 @@ export default function MembersPage() {
                   })}
                 </div>
 
-                {/* SETA DIREITA */}
                 {courses.length >= 5 && showRightArrow[section._id] && (
                   <button
                     onClick={() => scroll(section._id, "right")}
@@ -576,7 +593,6 @@ export default function MembersPage() {
         })}
       </div>
 
-      {/* Estilos globais */}
       <style>{`
         @keyframes fadeIn {
           from {
@@ -598,7 +614,6 @@ export default function MembersPage() {
           animation: blink 1s infinite;
         }
         
-        /* Scrollbar personalizada */
         ::-webkit-scrollbar {
           width: 8px;
           height: 8px;
@@ -615,6 +630,15 @@ export default function MembersPage() {
         
         ::-webkit-scrollbar-thumb:hover {
           background: rgba(30, 100, 255, 0.3);
+        }
+        
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </div>
