@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import { api } from '../services/api';
-import { User, Mail, Phone, Shield, LogOut, Save, X } from 'lucide-react';
+import { User, Mail, Phone, Shield, LogOut, Save, X, ArrowLeft } from 'lucide-react';
 import MarketBackground from '../seels/MarketBackground';
 
 export default function ProfilePage() {
-  const { user, refreshUser } = useUser();
+  const { user, refreshUser, loading: userLoading } = useUser();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,6 +30,7 @@ export default function ProfilePage() {
       setMessage({ type: 'success', text: 'Perfil atualizado com sucesso!' });
       setIsEditing(false);
     } catch (error) {
+      console.error('Erro ao atualizar perfil:', error);
       setMessage({ type: 'error', text: 'Erro ao atualizar perfil. Tente novamente.' });
     } finally {
       setLoading(false);
@@ -42,11 +43,48 @@ export default function ProfilePage() {
     navigate('/');
   };
 
+  if (userLoading) {
+    return (
+      <div className="relative min-h-screen bg-black text-white">
+        <MarketBackground />
+        <div className="relative z-10 pt-20 pb-16 px-4 text-center">
+          <p>Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="relative min-h-screen bg-black text-white">
+        <MarketBackground />
+        <div className="relative z-10 pt-20 pb-16 px-4 text-center">
+          <p className="text-red-400">Usuário não encontrado. Faça login novamente.</p>
+          <button
+            onClick={() => navigate('/')}
+            className="mt-4 px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+          >
+            Ir para o login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen bg-black text-white">
       <MarketBackground />
       
       <div className="relative z-10 pt-20 pb-16 px-4 md:px-12 max-w-4xl mx-auto">
+        {/* Botão voltar */}
+        <button
+          onClick={() => navigate('/member')}
+          className="mb-6 flex items-center gap-2 text-blue-400 hover:text-blue-300 transition"
+        >
+          <ArrowLeft size={20} />
+          Voltar
+        </button>
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-blue-300 bg-clip-text text-transparent">
@@ -73,7 +111,7 @@ export default function ProfilePage() {
               <User size={32} className="text-white/90" />
             </div>
             <div>
-              <h2 className="text-2xl font-semibold">{user?.name || 'Carregando...'}</h2>
+              <h2 className="text-2xl font-semibold">{user?.name || 'Usuário'}</h2>
               <p className="text-gray-400 flex items-center gap-1 mt-1">
                 <Shield size={14} />
                 {user?.role === 'admin' ? 'Administrador' : 'Membro'}
@@ -84,7 +122,7 @@ export default function ProfilePage() {
           {/* Formulário */}
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 items-center gap-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                 <User size={16} /> Nome completo
               </label>
               {isEditing ? (
@@ -101,7 +139,7 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 items-center gap-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                 <Mail size={16} /> E-mail
               </label>
               {isEditing ? (
@@ -118,7 +156,7 @@ export default function ProfilePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2 items-center gap-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2 flex items-center gap-2">
                 <Phone size={16} /> Telefone
               </label>
               {isEditing ? (
@@ -137,7 +175,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Botões */}
-          <div className="flex gap-4 mt-8 pt-4 border-t border-blue-900/30">
+          <div className="flex flex-wrap gap-4 mt-8 pt-4 border-t border-blue-900/30">
             {isEditing ? (
               <>
                 <button

@@ -37,16 +37,20 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const refreshUser = async () => {
     try {
       const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      console.log('🔑 Token existe?', token ? 'SIM' : 'NÃO');
+      
       if (!token) {
         setUser(null);
         setLoading(false);
         return;
       }
 
+      console.log('📡 Buscando dados do usuário...');
       const response = await api.get('/protected/me');
+      console.log('✅ Resposta do backend:', response.data);
       setUser(response.data.user);
     } catch (error) {
-      console.error('Erro ao buscar usuário:', error);
+      console.error('❌ Erro ao buscar usuário:', error);
       setUser(null);
     } finally {
       setLoading(false);

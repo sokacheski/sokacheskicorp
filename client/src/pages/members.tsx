@@ -364,13 +364,16 @@ export default function MembersPage() {
               <Search size={20} className="text-white/60 group-hover:text-blue-400 transition" />
             </button>
 
-            {/* Perfil - Ícone UserCircle */}
+            {/* Perfil - Ícone UserCircle com navegação */}
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-700 to-blue-500 rounded-full blur opacity-40 group-hover:opacity-70 transition" />
               <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-full bg-gradient-to-br from-blue-800 to-blue-600 p-[2px]">
-                <div className="w-full h-full rounded-full bg-black/90 flex items-center justify-center">
+                <button 
+                  onClick={() => navigate("/member/perfil")}
+                  className="w-full h-full rounded-full bg-black/90 flex items-center justify-center cursor-pointer"
+                >
                   <UserCircle size={16} className="text-blue-400/70 group-hover:text-blue-400 transition" />
-                </div>
+                </button>
               </div>
             </div>
           </div>
